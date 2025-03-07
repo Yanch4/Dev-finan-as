@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dev.finance$</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="content-language" content="pt-BR" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link rel="shortcut icon" href="./assets/favicon.png" type="image/x-icon" />
+
+    <link rel="stylesheet" href="./styles/main.css" />
+    <link rel="stylesheet" href="./styles/responsivity.css" />
+    <link rel="stylesheet" href="./styles/index.css" />
+    <link rel="stylesheet" href="./styles/modal.css" />
+    <link rel="stylesheet" href="./styles/form-modal.css" />
+    <link rel="stylesheet" href="./styles/menu-float-button.css" />
+    <link rel="stylesheet" href="./styles/scrollbar.css" />
+    <link rel="stylesheet" href="./styles/toggle-switch.css" />
+    <link rel="stylesheet" href="./styles/switch-month.css" />
+    <link rel="stylesheet" href="./styles/toast.css" />
+    <link rel="stylesheet" href="./styles/animations.css" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,400;0,500;0,700;1,100;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <img src="./assets/logo.svg" alt="logo dev.finance$" />
+    </header>
+    <main class="container">
+      <section id="container-calendar-and-opening-balance">
+        <h2 class="sr-only">Saldo inicial</h2>
+        <div
+          onclick="OpeningBalanceModal.open()"
+          class="mini-card opening-balance"
+        >
+          <h3>
+            <img src="./assets/money.svg" alt="Imagem de carteira" />
+            <span>Saldo inicial</span>
+          </h3>
+          <p id="openingBalanceDisplay">R$ 0,00</p>
+        </div>
+
+        <h2 class="sr-only">Calendário</h2>
+        <h3 id="year-calender"></h3>
+        <div id="switch-month">
+          <button id="switch-previous-month-button">
+            onclick="Calendar.switchMonth('next')" class="switch-month-button"
+            title="Passar para o próximo mês">
+            <img src="./assets/arrow.svg" alt="" />
+          </button>
+        </div>
+      </section>
+
+      <section id="balance">
+        <h2 class="sr-only">Balanço</h2>
+        <div class="card">
+          <h3>
+            <span>Resultado do mês</span>
+            <img src="./assets/expanse.svg" alt="Imagem de saída" />
+          </h3>
+          <p id="totalBalanceDisplay">R$0,00</p>
+        </div>
+      </section>
+
+      <section id="transation">
+        <h2 class="sr-only">Transações</h2>
+
+        <!-- Substituído pelo FloatButton -->
+        <!-- <a href="#" onclick="Modal.open()" class="button new">+ Nova Transação</ a> -->
+
+        <table id="data-table">
+          <thead>
+            <tr>
+              <th>Descrição</th>
+              <th>Categoria</th>
+              <th>Valor</th>
+              <th>Data</th>
+              <th></th>
+            </tr>
+          </thead>
+        </table>
+      </section>
+    </main>
+    <div id="create-transaction-modal" class="modal-overlay">
+      <div class="modal">
+        <div id="form">
+          <h2>Nova transação</h2>
+          <form onsubmit="Form.submit(event)">
+            <div class="input-container">
+              <div class="input-group">
+                <select id="category" name="category"></select>
+              </div>
+              <div class="input-group">
+                <label for="descripition" class="" sr-only>Descrição</label>
+                <label
+                  type="text"
+                  id="descripition"
+                  name="descripition"
+                  placeholder="Descrição"
+                ></label>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="amount" class="sr-only">Valor</label>
+              <label
+                type="number"
+                id="amount"
+                name="amount"
+                placeholder="0,00"
+                step="0.01"
+              ></label>
+            </div>
+            <small class="help-for-modal">
+              Use o sinal - (negativo) para despesas e , (vírgula) para casas
+              decimais</small
+            >
+            <div class="input-group">
+              <label for="date" class="sr-only">Data</label>
+              <label type="date" id="date" name="date"></label>
+            </div>
+
+            <div class="input-group switch">
+              <div class="switch-group">
+                <div class="toggle">
+                  <input
+                    type="checkbox"
+                    id="deposit"
+                    name="deposit"
+                    checked="true"
+                  />
+                </div>
+                <label for="deposit">Deposito</label>
+              </div>
+              <small
+                class="help-for-modal"
+                Se
+                habilitado,
+                o
+                valor
+                será
+                contabilizado
+                no
+                sistema.
+                Se
+                desabilidado,
+                este
+                lançamento
+                aguardará
+                o
+                deposito,
+                (ativação
+                deste
+                item)
+              ></small>
+            </div>
+            <div class="input-group actions">
+              <a onclick="CreateTransactionModal.close()" class="button cancel"
+                >Cancelar</a
+              >
+              <button type="submit">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="update-transaction-modal" class="modal-overlay">
+      <div class="modal">
+        <div id="form">
+          <h2>Atualizar Transação</h2>
+          <form
+            id="update-transaction-form"
+            aria-modal-index=""
+            onsubmit="UpdateTransactionForm.submit(event)"
+          >
+            <div class="input-container">
+              <div class="input-group">
+                <select id="update-category" name="update-category"></select>
+              </div>
+              <div class="input-group">
+                <label for="update-description" class="sr-only"
+                  >Descrição</label
+                >
+                <input
+                  type="text"
+                  id="update-description"
+                  name="update-description"
+                  placeholder="Descrição"
+                />
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="update-amount" class="sr-only">Valor</label>
+              <input
+                type="number"
+                id="update-amount"
+                name="update-amount"
+                placeholder="0,00"
+                step="0.01"
+              />
+            </div>
+
+            <small class="help-for-modal"
+              >Use o sinal - (negativo) para despesas e , (vírgula) para casas
+              decimais</small
+            >
+
+            <div class="input-group">
+              <label for="update-date" class="sr-only">Data</label>
+              <input type="date" id="update-date" name="update-date" />
+            </div>
+
+            <div class="input-group switch">
+              <div class="switch-group">
+                <div class="toggle">
+                  <input
+                    type="checkbox"
+                    id="update-deposit"
+                    name="update-deposit"
+                    checked="true"
+                  />
+                </div>
+                <label for="update-deposit">Deposito</label>
+              </div>
+
+              <small class="help-for-modal"
+                >Se habilitado, o valor será contabilizado no sistema. Se
+                desabilidado, este lançamento aguardará o deposito, (ativação
+                deste item)</small
+              >
+            </div>
+
+            <div class="input-group actions">
+              <a onclick="UpdateTransactionModal.close()" class="button cancel"
+                >Cancelar</a
+              >
+              <button type="submit">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
